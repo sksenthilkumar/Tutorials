@@ -23,7 +23,7 @@ W = tf.Variable(tf.truncated_normal([image_size*image_size, labels_size], stddev
 b = tf.Variable(tf.constant(0.1, shape=[labels_size]))
 
 # Build the network (only output layer)
-output = tf.matmul(training_data, W) + b
+output = tf.matmul(training_data, W, name="op") + b
 
 # Define the loss function
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=output))
@@ -57,4 +57,6 @@ with tf.Session() as sess:
     # Evaluate on the test set
     test_accuracy = accuracy.eval(feed_dict={training_data: mnist.test.images, labels: mnist.test.labels})
     print("Test accuracy: %g %%"%(test_accuracy*100))
+    saver = tf.train.Saver()
+    last_chkp = saver.save(sess, 'results/graph.chkp')
 
